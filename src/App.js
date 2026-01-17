@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './App.css';
 import Checkout from './Checkout';
 
@@ -9,6 +9,9 @@ function App() {
   const [showCheckout, setShowCheckout] = useState(false);
   const [orderComplete, setOrderComplete] = useState(false);
   const [imageErrors, setImageErrors] = useState({});
+  const [promoCode, setPromoCode] = useState('');
+  const [appliedPromo, setAppliedPromo] = useState(null);
+  const [currentSlide, setCurrentSlide] = useState(0);
 
   const cakeCategories = {
     party: {
@@ -261,6 +264,26 @@ function App() {
 
   const allCakes = Object.values(cakeCategories).flatMap(category => category.cakes);
 
+  // Featured cakes for carousel
+  const featuredCakes = allCakes.slice(0, 6);
+
+  // Promo codes
+  const promoCodes = {
+    'WELCOME20': { discount: 20, description: '20% off on your first order' },
+    'CAKE50': { discount: 50, description: 'Flat ₹50 off on orders above ₹1000' },
+    'PARTY30': { discount: 30, description: '30% off on party cakes' },
+    'BIRTHDAY25': { discount: 25, description: '25% off on birthday cakes' },
+    'SAVE100': { discount: 100, description: 'Flat ₹100 off on orders above ₹2000' }
+  };
+
+  // Offers and deals
+  const offers = [
+    { id: 1, title: 'Buy 2 Get 1 Free', description: 'On all party cakes', discount: '33% OFF', color: '#f5576c' },
+    { id: 2, title: 'Weekend Special', description: 'Extra 15% off on weekends', discount: '15% OFF', color: '#667eea' },
+    { id: 3, title: 'Free Delivery', description: 'On orders above ₹500', discount: 'FREE', color: '#f093fb' },
+    { id: 4, title: 'Combo Deal', description: '2 Cakes + 1 Pastry', discount: '₹299', color: '#4facfe' }
+  ];
+
   const getFilteredCakes = () => {
     if (activeCategory === 'all') {
       return allCakes;
@@ -307,6 +330,47 @@ function App() {
   const getTotalPrice = () => {
     return cart.reduce((total, item) => total + (item.price * item.quantity), 0);
   };
+
+  const getDiscountedPrice = () => {
+    let total = getTotalPrice();
+    if (appliedPromo) {
+      if (appliedPromo.discount <= 100) {
+        // Percentage discount
+        total = total * (1 - appliedPromo.discount / 100);
+      } else {
+        // Fixed amount discount
+        total = Math.max(0, total - appliedPromo.discount);
+      }
+    }
+    return total;
+  };
+
+  const getDiscountAmount = () => {
+    return getTotalPrice() - getDiscountedPrice();
+  };
+
+  const applyPromoCode = () => {
+    const code = promoCode.toUpperCase().trim();
+    if (promoCodes[code]) {
+      setAppliedPromo(promoCodes[code]);
+      setPromoCode('');
+      alert(`Promo code "${code}" applied! ${promoCodes[code].description}`);
+    } else {
+      alert('Invalid promo code. Please try again.');
+    }
+  };
+
+  const removePromoCode = () => {
+    setAppliedPromo(null);
+  };
+
+  // Auto-slide carousel
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % featuredCakes.length);
+    }, 4000);
+    return () => clearInterval(interval);
+  }, [featuredCakes.length]);
 
   const getCartItemCount = () => {
     return cart.reduce((total, item) => total + item.quantity, 0);
@@ -357,7 +421,7 @@ function App() {
     return (
       <Checkout
         cart={cart}
-        totalPrice={getTotalPrice()}
+        totalPrice={getDiscountedPrice()}
         onBack={() => setShowCheckout(false)}
         onOrderComplete={handleOrderComplete}
       />
@@ -382,6 +446,102 @@ function App() {
           <div className="container">
             <h2>Fresh Cakes Made with Love</h2>
             <p>Premium quality cakes for every celebration - Party, Birthday, Wedding & More!</p>
+          </div>
+        </section>
+
+        {/* Moving Offers Banner */}
+        <section className="offers-banner">
+          <div className="offers-scroll">
+            <div className="offers-track">
+              {[...offers, ...offers].map((offer, index) => (
+                <div key={`${offer.id}-${index}`} className="offer-item" style={{ '--offer-color': offer.color }}>
+                  <span className="offer-badge">{offer.discount}</span>
+                  <div className="offer-content">
+                    <strong>{offer.title}</strong>
+                    <span>{offer.description}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Featured Cakes Carousel */}
+        <section className="featured-section">
+          <div className="container">
+            <h2 className="section-title">Featured Cakes</h2>
+            <div className="carousel-container">
+              <div 
+                className="carousel-track" 
+                style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+              >
+                {featuredCakes.map((cake, index) => (
+                  <div key={cake.id} className="carousel-slide">
+                    <div className="carousel-cake-card">
+                      <div className="carousel-image-wrapper">
+                        <img 
+                          src={getImageUrl(cake.image, cake.id)} 
+                          alt={cake.name} 
+                          className="carousel-cake-image"
+                          loading="lazy"
+                          decoding="async"
+                          onError={() => handleImageError(cake.id)}
+                        />
+                      </div>
+                      <div className="carousel-cake-info">
+                        <h3>{cake.name}</h3>
+                        <p className="carousel-description">{cake.description}</p>
+                        <div className="carousel-price">₹{formatPrice(cake.price)}</div>
+                        <button 
+                          className="carousel-add-btn" 
+                          onClick={() => addToCart(cake)}
+                        >
+                          Add to Cart
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className="carousel-controls">
+                {featuredCakes.map((_, index) => (
+                  <button
+                    key={index}
+                    className={`carousel-dot ${index === currentSlide ? 'active' : ''}`}
+                    onClick={() => setCurrentSlide(index)}
+                  />
+                ))}
+              </div>
+              <button 
+                className="carousel-nav carousel-prev"
+                onClick={() => setCurrentSlide((prev) => (prev - 1 + featuredCakes.length) % featuredCakes.length)}
+              >
+                ‹
+              </button>
+              <button 
+                className="carousel-nav carousel-next"
+                onClick={() => setCurrentSlide((prev) => (prev + 1) % featuredCakes.length)}
+              >
+                ›
+              </button>
+            </div>
+          </div>
+        </section>
+
+        {/* Deals Section */}
+        <section className="deals-section">
+          <div className="container">
+            <h2 className="section-title">Special Deals</h2>
+            <div className="deals-grid">
+              {offers.map(offer => (
+                <div key={offer.id} className="deal-card" style={{ '--deal-color': offer.color }}>
+                  <div className="deal-badge">{offer.discount}</div>
+                  <h3>{offer.title}</h3>
+                  <p>{offer.description}</p>
+                  <button className="deal-btn">Shop Now</button>
+                </div>
+              ))}
+            </div>
           </div>
         </section>
 
@@ -425,8 +585,46 @@ function App() {
                     ))}
                   </div>
                   <div className="cart-footer">
-                    <div className="cart-total">
-                      <strong>Total: ₹{formatPrice(getTotalPrice())}</strong>
+                    {/* Promo Code Section */}
+                    <div className="promo-section">
+                      {!appliedPromo ? (
+                        <div className="promo-input-group">
+                          <input
+                            type="text"
+                            placeholder="Enter promo code"
+                            value={promoCode}
+                            onChange={(e) => setPromoCode(e.target.value)}
+                            className="promo-input"
+                            onKeyPress={(e) => e.key === 'Enter' && applyPromoCode()}
+                          />
+                          <button className="promo-apply-btn" onClick={applyPromoCode}>
+                            Apply
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="promo-applied">
+                          <span>✅ {appliedPromo.description}</span>
+                          <button className="promo-remove-btn" onClick={removePromoCode}>
+                            Remove
+                          </button>
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="cart-totals">
+                      <div className="total-row">
+                        <span>Subtotal:</span>
+                        <span>₹{formatPrice(getTotalPrice())}</span>
+                      </div>
+                      {appliedPromo && (
+                        <div className="total-row discount-row">
+                          <span>Discount:</span>
+                          <span>-₹{formatPrice(getDiscountAmount())}</span>
+                        </div>
+                      )}
+                      <div className="cart-total">
+                        <strong>Total: ₹{formatPrice(getDiscountedPrice())}</strong>
+                      </div>
                     </div>
                     <button 
                       className="checkout-btn" 
