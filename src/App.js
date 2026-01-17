@@ -1,10 +1,14 @@
 import { useState } from 'react';
 import './App.css';
+import Checkout from './Checkout';
 
 function App() {
   const [cart, setCart] = useState([]);
   const [showCart, setShowCart] = useState(false);
   const [activeCategory, setActiveCategory] = useState('all');
+  const [showCheckout, setShowCheckout] = useState(false);
+  const [orderComplete, setOrderComplete] = useState(false);
+  const [imageErrors, setImageErrors] = useState({});
 
   const cakeCategories = {
     party: {
@@ -15,7 +19,7 @@ function App() {
           name: "Chocolate Party Cake",
           price: 899,
           description: "Rich chocolate cake perfect for parties",
-          image: "https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=400&h=400&fit=crop",
+          image: "https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=300&h=300&fit=crop&q=80",
           weight: "1 kg"
         },
         {
@@ -23,7 +27,7 @@ function App() {
           name: "Rainbow Party Cake",
           price: 1299,
           description: "Colorful layered cake for celebrations",
-          image: "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=400&h=400&fit=crop",
+          image: "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=300&h=300&fit=crop&q=80",
           weight: "1.5 kg"
         },
         {
@@ -31,7 +35,7 @@ function App() {
           name: "Butterscotch Party Cake",
           price: 999,
           description: "Delicious butterscotch flavor",
-          image: "https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=400&h=400&fit=crop",
+          image: "https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=300&h=300&fit=crop&q=80",
           weight: "1 kg"
         },
         {
@@ -39,7 +43,7 @@ function App() {
           name: "Black Forest Party Cake",
           price: 1199,
           description: "Classic black forest with cherries",
-          image: "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=400&h=400&fit=crop",
+          image: "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=300&h=300&fit=crop&q=80",
           weight: "1.5 kg"
         },
         {
@@ -47,7 +51,7 @@ function App() {
           name: "Pineapple Party Cake",
           price: 849,
           description: "Fresh pineapple flavor",
-          image: "https://images.unsplash.com/photo-1621303837174-89787a7d4729?w=400&h=400&fit=crop",
+          image: "https://images.unsplash.com/photo-1621303837174-89787a7d4729?w=300&h=300&fit=crop&q=80",
           weight: "1 kg"
         },
         {
@@ -55,7 +59,7 @@ function App() {
           name: "Red Velvet Party Cake",
           price: 1099,
           description: "Elegant red velvet with cream cheese",
-          image: "https://images.unsplash.com/photo-1614707267537-b85aaf00c4b7?w=400&h=400&fit=crop",
+          image: "https://images.unsplash.com/photo-1614707267537-b85aaf00c4b7?w=300&h=300&fit=crop&q=80",
           weight: "1.5 kg"
         }
       ]
@@ -68,7 +72,7 @@ function App() {
           name: "Chocolate Birthday Cake",
           price: 799,
           description: "Perfect chocolate cake for birthdays",
-          image: "https://images.unsplash.com/photo-1606312619070-d48b4bcbcb69?w=400&h=400&fit=crop",
+          image: "https://images.unsplash.com/photo-1606312619070-d48b4bcbcb69?w=300&h=300&fit=crop&q=80",
           weight: "1 kg"
         },
         {
@@ -76,7 +80,7 @@ function App() {
           name: "Vanilla Birthday Cake",
           price: 699,
           description: "Classic vanilla with buttercream",
-          image: "https://images.unsplash.com/photo-1621303837174-89787a7d4729?w=400&h=400&fit=crop",
+          image: "https://images.unsplash.com/photo-1621303837174-89787a7d4729?w=300&h=300&fit=crop&q=80",
           weight: "1 kg"
         },
         {
@@ -84,7 +88,7 @@ function App() {
           name: "Strawberry Birthday Cake",
           price: 949,
           description: "Fresh strawberries with cream",
-          image: "https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=400&h=400&fit=crop",
+          image: "https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=300&h=300&fit=crop&q=80",
           weight: "1 kg"
         },
         {
@@ -92,7 +96,7 @@ function App() {
           name: "Mango Birthday Cake",
           price: 999,
           description: "Tropical mango flavor",
-          image: "https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=400&h=400&fit=crop",
+          image: "https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=300&h=300&fit=crop&q=80",
           weight: "1 kg"
         },
         {
@@ -100,7 +104,7 @@ function App() {
           name: "KitKat Birthday Cake",
           price: 1299,
           description: "Chocolate cake with KitKat decoration",
-          image: "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=400&h=400&fit=crop",
+          image: "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=300&h=300&fit=crop&q=80",
           weight: "1.5 kg"
         },
         {
@@ -108,7 +112,7 @@ function App() {
           name: "Oreo Birthday Cake",
           price: 1199,
           description: "Chocolate cake with Oreo cookies",
-          image: "https://images.unsplash.com/photo-1614707267537-b85aaf00c4b7?w=400&h=400&fit=crop",
+          image: "https://images.unsplash.com/photo-1614707267537-b85aaf00c4b7?w=300&h=300&fit=crop&q=80",
           weight: "1.5 kg"
         }
       ]
@@ -121,7 +125,7 @@ function App() {
           name: "Elegant White Wedding Cake",
           price: 4999,
           description: "Multi-tier elegant wedding cake",
-          image: "https://images.unsplash.com/photo-1519869325935-377c969b3a8c?w=400&h=400&fit=crop",
+          image: "https://images.unsplash.com/photo-1519869325935-377c969b3a8c?w=300&h=300&fit=crop&q=80",
           weight: "3 kg"
         },
         {
@@ -129,7 +133,7 @@ function App() {
           name: "Royal Wedding Cake",
           price: 6999,
           description: "Luxurious multi-tier wedding cake",
-          image: "https://images.unsplash.com/photo-1519869325935-377c969b3a8c?w=400&h=400&fit=crop",
+          image: "https://images.unsplash.com/photo-1519869325935-377c969b3a8c?w=300&h=300&fit=crop&q=80",
           weight: "5 kg"
         },
         {
@@ -137,7 +141,7 @@ function App() {
           name: "Floral Wedding Cake",
           price: 5999,
           description: "Beautiful floral decorated cake",
-          image: "https://images.unsplash.com/photo-1519869325935-377c969b3a8c?w=400&h=400&fit=crop",
+          image: "https://images.unsplash.com/photo-1519869325935-377c969b3a8c?w=300&h=300&fit=crop&q=80",
           weight: "4 kg"
         },
         {
@@ -145,7 +149,7 @@ function App() {
           name: "Gold Accent Wedding Cake",
           price: 7999,
           description: "Premium cake with gold accents",
-          image: "https://images.unsplash.com/photo-1519869325935-377c969b3a8c?w=400&h=400&fit=crop",
+          image: "https://images.unsplash.com/photo-1519869325935-377c969b3a8c?w=300&h=300&fit=crop&q=80",
           weight: "5 kg"
         }
       ]
@@ -158,7 +162,7 @@ function App() {
           name: "Heart Shaped Anniversary Cake",
           price: 1499,
           description: "Romantic heart-shaped cake",
-          image: "https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=400&h=400&fit=crop",
+          image: "https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=300&h=300&fit=crop&q=80",
           weight: "1.5 kg"
         },
         {
@@ -166,7 +170,7 @@ function App() {
           name: "Chocolate Truffle Anniversary",
           price: 1699,
           description: "Rich chocolate truffle cake",
-          image: "https://images.unsplash.com/photo-1606312619070-d48b4bcbcb69?w=400&h=400&fit=crop",
+          image: "https://images.unsplash.com/photo-1606312619070-d48b4bcbcb69?w=300&h=300&fit=crop&q=80",
           weight: "2 kg"
         },
         {
@@ -174,7 +178,7 @@ function App() {
           name: "Red Velvet Anniversary",
           price: 1599,
           description: "Elegant red velvet for couples",
-          image: "https://images.unsplash.com/photo-1614707267537-b85aaf00c4b7?w=400&h=400&fit=crop",
+          image: "https://images.unsplash.com/photo-1614707267537-b85aaf00c4b7?w=300&h=300&fit=crop&q=80",
           weight: "1.5 kg"
         }
       ]
@@ -187,7 +191,7 @@ function App() {
           name: "Photo Cake",
           price: 1999,
           description: "Custom photo printed cake",
-          image: "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=400&h=400&fit=crop",
+          image: "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=300&h=300&fit=crop&q=80",
           weight: "2 kg"
         },
         {
@@ -195,7 +199,7 @@ function App() {
           name: "Theme Cake",
           price: 2499,
           description: "Custom themed cake design",
-          image: "https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=400&h=400&fit=crop",
+          image: "https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=300&h=300&fit=crop&q=80",
           weight: "2 kg"
         },
         {
@@ -203,7 +207,7 @@ function App() {
           name: "Number Cake",
           price: 1299,
           description: "Custom number shaped cake",
-          image: "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=400&h=400&fit=crop",
+          image: "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=300&h=300&fit=crop&q=80",
           weight: "1.5 kg"
         },
         {
@@ -211,7 +215,7 @@ function App() {
           name: "Character Cake",
           price: 1799,
           description: "Custom character design cake",
-          image: "https://images.unsplash.com/photo-1621303837174-89787a7d4729?w=400&h=400&fit=crop",
+          image: "https://images.unsplash.com/photo-1621303837174-89787a7d4729?w=300&h=300&fit=crop&q=80",
           weight: "2 kg"
         }
       ]
@@ -224,7 +228,7 @@ function App() {
           name: "Gulab Jamun Cake",
           price: 899,
           description: "Fusion of gulab jamun in cake",
-          image: "https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=400&h=400&fit=crop",
+          image: "https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=300&h=300&fit=crop&q=80",
           weight: "1 kg"
         },
         {
@@ -232,7 +236,7 @@ function App() {
           name: "Kaju Katli Cake",
           price: 1499,
           description: "Rich cashew cake",
-          image: "https://images.unsplash.com/photo-1606312619070-d48b4bcbcb69?w=400&h=400&fit=crop",
+          image: "https://images.unsplash.com/photo-1606312619070-d48b4bcbcb69?w=300&h=300&fit=crop&q=80",
           weight: "1.5 kg"
         },
         {
@@ -240,7 +244,7 @@ function App() {
           name: "Rasmalai Cake",
           price: 1099,
           description: "Rasmalai flavored cake",
-          image: "https://images.unsplash.com/photo-1614707267537-b85aaf00c4b7?w=400&h=400&fit=crop",
+          image: "https://images.unsplash.com/photo-1614707267537-b85aaf00c4b7?w=300&h=300&fit=crop&q=80",
           weight: "1.5 kg"
         },
         {
@@ -248,7 +252,7 @@ function App() {
           name: "Kesar Pista Cake",
           price: 1199,
           description: "Saffron pistachio cake",
-          image: "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=400&h=400&fit=crop",
+          image: "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=300&h=300&fit=crop&q=80",
           weight: "1.5 kg"
         }
       ]
@@ -308,6 +312,58 @@ function App() {
     return cart.reduce((total, item) => total + item.quantity, 0);
   };
 
+  const handleImageError = (cakeId) => {
+    setImageErrors(prev => ({
+      ...prev,
+      [cakeId]: true
+    }));
+  };
+
+  const getImageUrl = (originalUrl, cakeId) => {
+    if (imageErrors[cakeId]) {
+      return 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="300" height="300"%3E%3Crect fill="%23f0f0f0" width="300" height="300"/%3E%3Ctext fill="%23999" x="50%25" y="50%25" text-anchor="middle" dy=".3em" font-size="20"%3E🍰%3C/text%3E%3C/svg%3E';
+    }
+    return originalUrl;
+  };
+
+  const handleOrderComplete = () => {
+    setOrderComplete(true);
+    setCart([]);
+    setTimeout(() => {
+      setOrderComplete(false);
+      setShowCheckout(false);
+    }, 3000);
+  };
+
+  if (orderComplete) {
+    return (
+      <div className="order-success">
+        <div className="order-success-content">
+          <div className="success-icon">✅</div>
+          <h1>Order Placed Successfully!</h1>
+          <p>Thank you for your order. We'll deliver your cakes soon!</p>
+          <button className="back-to-shop-btn" onClick={() => {
+            setOrderComplete(false);
+            setShowCheckout(false);
+          }}>
+            Continue Shopping
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (showCheckout) {
+    return (
+      <Checkout
+        cart={cart}
+        totalPrice={getTotalPrice()}
+        onBack={() => setShowCheckout(false)}
+        onOrderComplete={handleOrderComplete}
+      />
+    );
+  }
+
   return (
     <div className="App">
       <header className="header">
@@ -346,7 +402,14 @@ function App() {
                     {cart.map(item => (
                       <div key={item.id} className="cart-item">
                         <div className="cart-item-info">
-                          <img src={item.image} alt={item.name} className="cart-item-image" />
+                          <img 
+                            src={getImageUrl(item.image, item.id)} 
+                            alt={item.name} 
+                            className="cart-item-image"
+                            loading="lazy"
+                            decoding="async"
+                            onError={() => handleImageError(item.id)}
+                          />
                           <div>
                             <h4>{item.name}</h4>
                             <p>₹{formatPrice(item.price)}</p>
@@ -365,7 +428,15 @@ function App() {
                     <div className="cart-total">
                       <strong>Total: ₹{formatPrice(getTotalPrice())}</strong>
                     </div>
-                    <button className="checkout-btn">Checkout</button>
+                    <button 
+                      className="checkout-btn" 
+                      onClick={() => {
+                        setShowCart(false);
+                        setShowCheckout(true);
+                      }}
+                    >
+                      Checkout
+                    </button>
                   </div>
                 </>
               )}
@@ -403,7 +474,14 @@ function App() {
               {getFilteredCakes().map(cake => (
                 <div key={cake.id} className="cake-card">
                   <div className="cake-image-wrapper">
-                    <img src={cake.image} alt={cake.name} className="cake-image" />
+                    <img 
+                      src={getImageUrl(cake.image, cake.id)} 
+                      alt={cake.name} 
+                      className="cake-image"
+                      loading="lazy"
+                      decoding="async"
+                      onError={() => handleImageError(cake.id)}
+                    />
                   </div>
                   <h3>{cake.name}</h3>
                   <p className="cake-description">{cake.description}</p>
