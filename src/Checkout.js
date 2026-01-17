@@ -10,7 +10,7 @@ function Checkout({ cart, totalPrice, onBack, onOrderComplete }) {
   // Example: 9876543210@ybl or yourname@ybl
   // To get your UPI ID: Open PhonePe app > Profile > Your UPI IDs
   const MERCHANT_UPI_ID = 'yourphonenumber@ybl'; // ⚠️ CHANGE THIS TO YOUR ACTUAL PHONEPE UPI ID
-  const MERCHANT_NAME = 'Mithai & Cakes'; // Your business name
+  const MERCHANT_NAME = "Ruchi's Bakers"; // Your business name
   // ============================================
 
   const [formData, setFormData] = useState({
@@ -75,7 +75,7 @@ function Checkout({ cart, totalPrice, onBack, onOrderComplete }) {
     setPaymentMethod('phonepe');
     
     // Create transaction note
-    const transactionNote = `Order from ${formData.name} - Mithai & Cakes`;
+    const transactionNote = `Order from ${formData.name} - Ruchi's Bakers`;
     
     // PhonePe UPI deep link format
     // Format: phonepe://pay?pa=<UPI_ID>&pn=<MERCHANT_NAME>&am=<AMOUNT>&cu=INR&tn=<TRANSACTION_NOTE>
@@ -128,7 +128,7 @@ function Checkout({ cart, totalPrice, onBack, onOrderComplete }) {
     const amount = totalPrice.toFixed(2);
     const upiId = encodeURIComponent(MERCHANT_UPI_ID);
     const merchantName = encodeURIComponent(MERCHANT_NAME);
-    const transactionNote = encodeURIComponent(`Order from ${formData.name} - Mithai & Cakes`);
+    const transactionNote = encodeURIComponent(`Order from ${formData.name} - Ruchi's Bakers`);
     
     const gpayLink = `tez://upi/pay?pa=${upiId}&pn=${merchantName}&am=${amount}&cu=INR&tn=${transactionNote}`;
     

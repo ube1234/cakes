@@ -432,7 +432,10 @@ function App() {
     <div className="App">
       <header className="header">
         <div className="container">
-          <h1 className="logo">🍰 Mithai & Cakes</h1>
+          <div className="logo-container">
+            <div className="logo-icon">🍰</div>
+            <h1 className="logo">Ruchi's Bakers</h1>
+          </div>
           <nav>
             <button className="cart-button" onClick={() => setShowCart(!showCart)}>
               🛒 Cart ({getCartItemCount()})
@@ -699,7 +702,7 @@ function App() {
 
       <footer className="footer">
         <div className="container">
-          <p>&copy; 2024 Mithai & Cakes. Made with ❤️ in India. All rights reserved.</p>
+          <p>&copy; 2024 Ruchi's Bakers. Made with ❤️ in India. All rights reserved.</p>
         </div>
       </footer>
     </div>
