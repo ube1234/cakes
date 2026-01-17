@@ -1,23 +1,431 @@
-import logo from './logo.svg';
+import { useState } from 'react';
 import './App.css';
 
 function App() {
+  const [cart, setCart] = useState([]);
+  const [showCart, setShowCart] = useState(false);
+  const [activeCategory, setActiveCategory] = useState('all');
+
+  const cakeCategories = {
+    party: {
+      name: 'Party Cakes',
+      cakes: [
+        {
+          id: 1,
+          name: "Chocolate Party Cake",
+          price: 899,
+          description: "Rich chocolate cake perfect for parties",
+          image: "https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=400&h=400&fit=crop",
+          weight: "1 kg"
+        },
+        {
+          id: 2,
+          name: "Rainbow Party Cake",
+          price: 1299,
+          description: "Colorful layered cake for celebrations",
+          image: "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=400&h=400&fit=crop",
+          weight: "1.5 kg"
+        },
+        {
+          id: 3,
+          name: "Butterscotch Party Cake",
+          price: 999,
+          description: "Delicious butterscotch flavor",
+          image: "https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=400&h=400&fit=crop",
+          weight: "1 kg"
+        },
+        {
+          id: 4,
+          name: "Black Forest Party Cake",
+          price: 1199,
+          description: "Classic black forest with cherries",
+          image: "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=400&h=400&fit=crop",
+          weight: "1.5 kg"
+        },
+        {
+          id: 5,
+          name: "Pineapple Party Cake",
+          price: 849,
+          description: "Fresh pineapple flavor",
+          image: "https://images.unsplash.com/photo-1621303837174-89787a7d4729?w=400&h=400&fit=crop",
+          weight: "1 kg"
+        },
+        {
+          id: 6,
+          name: "Red Velvet Party Cake",
+          price: 1099,
+          description: "Elegant red velvet with cream cheese",
+          image: "https://images.unsplash.com/photo-1614707267537-b85aaf00c4b7?w=400&h=400&fit=crop",
+          weight: "1.5 kg"
+        }
+      ]
+    },
+    birthday: {
+      name: 'Birthday Cakes',
+      cakes: [
+        {
+          id: 7,
+          name: "Chocolate Birthday Cake",
+          price: 799,
+          description: "Perfect chocolate cake for birthdays",
+          image: "https://images.unsplash.com/photo-1606312619070-d48b4bcbcb69?w=400&h=400&fit=crop",
+          weight: "1 kg"
+        },
+        {
+          id: 8,
+          name: "Vanilla Birthday Cake",
+          price: 699,
+          description: "Classic vanilla with buttercream",
+          image: "https://images.unsplash.com/photo-1621303837174-89787a7d4729?w=400&h=400&fit=crop",
+          weight: "1 kg"
+        },
+        {
+          id: 9,
+          name: "Strawberry Birthday Cake",
+          price: 949,
+          description: "Fresh strawberries with cream",
+          image: "https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=400&h=400&fit=crop",
+          weight: "1 kg"
+        },
+        {
+          id: 10,
+          name: "Mango Birthday Cake",
+          price: 999,
+          description: "Tropical mango flavor",
+          image: "https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=400&h=400&fit=crop",
+          weight: "1 kg"
+        },
+        {
+          id: 11,
+          name: "KitKat Birthday Cake",
+          price: 1299,
+          description: "Chocolate cake with KitKat decoration",
+          image: "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=400&h=400&fit=crop",
+          weight: "1.5 kg"
+        },
+        {
+          id: 12,
+          name: "Oreo Birthday Cake",
+          price: 1199,
+          description: "Chocolate cake with Oreo cookies",
+          image: "https://images.unsplash.com/photo-1614707267537-b85aaf00c4b7?w=400&h=400&fit=crop",
+          weight: "1.5 kg"
+        }
+      ]
+    },
+    wedding: {
+      name: 'Wedding Cakes',
+      cakes: [
+        {
+          id: 13,
+          name: "Elegant White Wedding Cake",
+          price: 4999,
+          description: "Multi-tier elegant wedding cake",
+          image: "https://images.unsplash.com/photo-1519869325935-377c969b3a8c?w=400&h=400&fit=crop",
+          weight: "3 kg"
+        },
+        {
+          id: 14,
+          name: "Royal Wedding Cake",
+          price: 6999,
+          description: "Luxurious multi-tier wedding cake",
+          image: "https://images.unsplash.com/photo-1519869325935-377c969b3a8c?w=400&h=400&fit=crop",
+          weight: "5 kg"
+        },
+        {
+          id: 15,
+          name: "Floral Wedding Cake",
+          price: 5999,
+          description: "Beautiful floral decorated cake",
+          image: "https://images.unsplash.com/photo-1519869325935-377c969b3a8c?w=400&h=400&fit=crop",
+          weight: "4 kg"
+        },
+        {
+          id: 16,
+          name: "Gold Accent Wedding Cake",
+          price: 7999,
+          description: "Premium cake with gold accents",
+          image: "https://images.unsplash.com/photo-1519869325935-377c969b3a8c?w=400&h=400&fit=crop",
+          weight: "5 kg"
+        }
+      ]
+    },
+    anniversary: {
+      name: 'Anniversary Cakes',
+      cakes: [
+        {
+          id: 17,
+          name: "Heart Shaped Anniversary Cake",
+          price: 1499,
+          description: "Romantic heart-shaped cake",
+          image: "https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=400&h=400&fit=crop",
+          weight: "1.5 kg"
+        },
+        {
+          id: 18,
+          name: "Chocolate Truffle Anniversary",
+          price: 1699,
+          description: "Rich chocolate truffle cake",
+          image: "https://images.unsplash.com/photo-1606312619070-d48b4bcbcb69?w=400&h=400&fit=crop",
+          weight: "2 kg"
+        },
+        {
+          id: 19,
+          name: "Red Velvet Anniversary",
+          price: 1599,
+          description: "Elegant red velvet for couples",
+          image: "https://images.unsplash.com/photo-1614707267537-b85aaf00c4b7?w=400&h=400&fit=crop",
+          weight: "1.5 kg"
+        }
+      ]
+    },
+    custom: {
+      name: 'Custom Cakes',
+      cakes: [
+        {
+          id: 20,
+          name: "Photo Cake",
+          price: 1999,
+          description: "Custom photo printed cake",
+          image: "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=400&h=400&fit=crop",
+          weight: "2 kg"
+        },
+        {
+          id: 21,
+          name: "Theme Cake",
+          price: 2499,
+          description: "Custom themed cake design",
+          image: "https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=400&h=400&fit=crop",
+          weight: "2 kg"
+        },
+        {
+          id: 22,
+          name: "Number Cake",
+          price: 1299,
+          description: "Custom number shaped cake",
+          image: "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=400&h=400&fit=crop",
+          weight: "1.5 kg"
+        },
+        {
+          id: 23,
+          name: "Character Cake",
+          price: 1799,
+          description: "Custom character design cake",
+          image: "https://images.unsplash.com/photo-1621303837174-89787a7d4729?w=400&h=400&fit=crop",
+          weight: "2 kg"
+        }
+      ]
+    },
+    traditional: {
+      name: 'Traditional Indian Cakes',
+      cakes: [
+        {
+          id: 24,
+          name: "Gulab Jamun Cake",
+          price: 899,
+          description: "Fusion of gulab jamun in cake",
+          image: "https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=400&h=400&fit=crop",
+          weight: "1 kg"
+        },
+        {
+          id: 25,
+          name: "Kaju Katli Cake",
+          price: 1499,
+          description: "Rich cashew cake",
+          image: "https://images.unsplash.com/photo-1606312619070-d48b4bcbcb69?w=400&h=400&fit=crop",
+          weight: "1.5 kg"
+        },
+        {
+          id: 26,
+          name: "Rasmalai Cake",
+          price: 1099,
+          description: "Rasmalai flavored cake",
+          image: "https://images.unsplash.com/photo-1614707267537-b85aaf00c4b7?w=400&h=400&fit=crop",
+          weight: "1.5 kg"
+        },
+        {
+          id: 27,
+          name: "Kesar Pista Cake",
+          price: 1199,
+          description: "Saffron pistachio cake",
+          image: "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=400&h=400&fit=crop",
+          weight: "1.5 kg"
+        }
+      ]
+    }
+  };
+
+  const allCakes = Object.values(cakeCategories).flatMap(category => category.cakes);
+
+  const getFilteredCakes = () => {
+    if (activeCategory === 'all') {
+      return allCakes;
+    }
+    return cakeCategories[activeCategory]?.cakes || [];
+  };
+
+  const formatPrice = (price) => {
+    return new Intl.NumberFormat('en-IN', {
+      maximumFractionDigits: 0
+    }).format(price);
+  };
+
+  const addToCart = (cake) => {
+    const existingItem = cart.find(item => item.id === cake.id);
+    if (existingItem) {
+      setCart(cart.map(item =>
+        item.id === cake.id
+          ? { ...item, quantity: item.quantity + 1 }
+          : item
+      ));
+    } else {
+      setCart([...cart, { ...cake, quantity: 1 }]);
+    }
+  };
+
+  const removeFromCart = (id) => {
+    setCart(cart.filter(item => item.id !== id));
+  };
+
+  const updateQuantity = (id, change) => {
+    setCart(cart.map(item => {
+      if (item.id === id) {
+        const newQuantity = item.quantity + change;
+        if (newQuantity <= 0) {
+          return null;
+        }
+        return { ...item, quantity: newQuantity };
+      }
+      return item;
+    }).filter(Boolean));
+  };
+
+  const getTotalPrice = () => {
+    return cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+  };
+
+  const getCartItemCount = () => {
+    return cart.reduce((total, item) => total + item.quantity, 0);
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> ans sve to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+      <header className="header">
+        <div className="container">
+          <h1 className="logo">🍰 Mithai & Cakes</h1>
+          <nav>
+            <button className="cart-button" onClick={() => setShowCart(!showCart)}>
+              🛒 Cart ({getCartItemCount()})
+            </button>
+          </nav>
+        </div>
       </header>
+
+      <main className="main-content">
+        <section className="hero">
+          <div className="container">
+            <h2>Fresh Cakes Made with Love</h2>
+            <p>Premium quality cakes for every celebration - Party, Birthday, Wedding & More!</p>
+          </div>
+        </section>
+
+        {showCart && (
+          <div className="cart-overlay" onClick={() => setShowCart(false)}>
+            <div className="cart-sidebar" onClick={(e) => e.stopPropagation()}>
+              <div className="cart-header">
+                <h2>Your Cart</h2>
+                <button className="close-cart" onClick={() => setShowCart(false)}>×</button>
+              </div>
+              {cart.length === 0 ? (
+                <div className="empty-cart">
+                  <p>Your cart is empty</p>
+                </div>
+              ) : (
+                <>
+                  <div className="cart-items">
+                    {cart.map(item => (
+                      <div key={item.id} className="cart-item">
+                        <div className="cart-item-info">
+                          <img src={item.image} alt={item.name} className="cart-item-image" />
+                          <div>
+                            <h4>{item.name}</h4>
+                            <p>₹{formatPrice(item.price)}</p>
+                          </div>
+                        </div>
+                        <div className="cart-item-controls">
+                          <button onClick={() => updateQuantity(item.id, -1)}>-</button>
+                          <span>{item.quantity}</span>
+                          <button onClick={() => updateQuantity(item.id, 1)}>+</button>
+                          <button className="remove-btn" onClick={() => removeFromCart(item.id)}>🗑️</button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="cart-footer">
+                    <div className="cart-total">
+                      <strong>Total: ₹{formatPrice(getTotalPrice())}</strong>
+                    </div>
+                    <button className="checkout-btn">Checkout</button>
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+        )}
+
+        <section className="products">
+          <div className="container">
+            <div className="category-tabs">
+              <button 
+                className={activeCategory === 'all' ? 'tab active' : 'tab'}
+                onClick={() => setActiveCategory('all')}
+              >
+                All Cakes
+              </button>
+              {Object.entries(cakeCategories).map(([key, category]) => (
+                <button
+                  key={key}
+                  className={activeCategory === key ? 'tab active' : 'tab'}
+                  onClick={() => setActiveCategory(key)}
+                >
+                  {category.name}
+                </button>
+              ))}
+            </div>
+
+            <h2 className="section-title">
+              {activeCategory === 'all' 
+                ? 'All Our Cakes' 
+                : cakeCategories[activeCategory]?.name || 'Our Cakes'}
+            </h2>
+            
+            <div className="cake-grid">
+              {getFilteredCakes().map(cake => (
+                <div key={cake.id} className="cake-card">
+                  <div className="cake-image-wrapper">
+                    <img src={cake.image} alt={cake.name} className="cake-image" />
+                  </div>
+                  <h3>{cake.name}</h3>
+                  <p className="cake-description">{cake.description}</p>
+                  <p className="cake-weight">Weight: {cake.weight}</p>
+                  <div className="cake-footer">
+                    <span className="cake-price">₹{formatPrice(cake.price)}</span>
+                    <button className="add-to-cart-btn" onClick={() => addToCart(cake)}>
+                      Add to Cart
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer className="footer">
+        <div className="container">
+          <p>&copy; 2024 Mithai & Cakes. Made with ❤️ in India. All rights reserved.</p>
+        </div>
+      </footer>
     </div>
   );
 }
