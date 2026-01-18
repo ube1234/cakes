@@ -434,7 +434,7 @@ function App() {
         <div className="container">
           <div className="logo-container">
             <div className="logo-icon">🍰</div>
-            <h1 className="logo">Ruchi's Bakers</h1>
+            <h1 className="logo">Ruchi Bakers</h1>
           </div>
           <nav>
             <button className="cart-button" onClick={() => setShowCart(!showCart)}>
@@ -702,7 +702,7 @@ function App() {
 
       <footer className="footer">
         <div className="container">
-          <p>&copy; 2024 Ruchi's Bakers. Made with ❤️ in India. All rights reserved.</p>
+          <p>&copy; 2024 Ruchi Bakers. Made with ❤️ in India. All rights reserved.</p>
         </div>
       </footer>
     </div>
